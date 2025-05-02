@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Fast Autoscaler for ECS with SQS Queue'
+
+Parameters:
+  ECSClusterName:
+    Type: String
+    Description: Name of the ECS cluster
+
+  ECSServiceName:
+    Type: String
+    Description: Name of the ECS service to autoscale
+
+  SQSQueueURL:
+    Type: String
+    Description: URL of the SQS queue to monitor
+
+  MinTasks:
+    Type: Number
+    Description: Minimum number of tasks
+    Default: 2
+
+  MaxTasks:
+    Type: Number
+    Description: Maximum number of tasks
+    Default: 100
+
+  ScaleUpThreshold:
+    Type: Number
+    Description: Queue size threshold for scaling up
+    Default: 100
+
+  ScaleDownThreshold:
+    Type: Number
+    Description: Queue size threshold for scaling down
+    Default: 10
+
+  ScaleOutCooldown:
+    Type: Number
+    Description: Cooldown period for scaling out (seconds)
+    Default: 60
+
+  ScaleInCooldown:
+    Type: Number
+    Description: Cooldown period for scaling in (seconds)
+    Default: 120
+
+  TasksPerMessage:
+    Type: Number
+    Description: Tasks per message ratio
+    Default: 0.01
+
+  UseCombinedMessages:
+    Type: String
+    Description: Whether to use combined (visible + in-flight) messages
+    Default: "False"
+    AllowedValues: ["True", "False"]
+
+  S3ConfigBucket:
+    Type: String
+    Description: S3 bucket for state storage
+
+  AutoscalerSchedule:
+    Type: String
+    Description: CloudWatch Events schedule expression
+    Default: "rate(1 minute)"
+
+Resources:
+  AutoscalerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ECSAutoscalerPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:GetQueueAttributes
+                Resource: !Sub "arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*"
+              - Effect: Allow
+                Action:
+                  - ecs:DescribeServices
+                  - ecs:UpdateService
+                Resource: !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/${ECSClusterName}/${ECSServiceName}"
+              - Effect: Allow
+                Action:
+                  - ecs:DescribeClusters
+                Resource: !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:cluster/${ECSClusterName}"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub "arn:aws:s3:::${S3ConfigBucket}/autoscaling-state/*"
+
+  AutoscalerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda_function.handler
+      Role: !GetAtt AutoscalerRole.Arn
+      Runtime: python3.9
+      Timeout: 60
+      MemorySize: 128
+      Environment:
+        Variables:
+          ECS_CLUSTER: !Ref ECSClusterName
+          SERVICE_NAME: !Ref ECSServiceName
+          SQS_QUEUE_URL: !Ref SQSQueueURL
+          MIN_TASKS: !Ref MinTasks
+          MAX_TASKS: !Ref MaxTasks
+          SCALE_UP_THRESHOLD: !Ref ScaleUpThreshold
+          SCALE_DOWN_THRESHOLD: !Ref ScaleDownThreshold
+          SCALE_OUT_COOLDOWN: !Ref ScaleOutCooldown
+          SCALE_IN_COOLDOWN: !Ref ScaleInCooldown
+          TASKS_PER_MESSAGE: !Ref TasksPerMessage
+          USE_COMBINED_MESSAGES: !Ref UseCombinedMessages
+          S3_CONFIG_BUCKET: !Ref S3ConfigBucket
+          LOG_LEVEL: INFO
+      Code:
+        ZipFile: |
+          # Placeholder - Replace with actual deployment package
+          def handler(event, context):
+              print("Placeholder function - replace with actual deployment package")
+              return {"status": "error", "message": "Placeholder function"}
+
+  AutoscalerScheduleRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Schedule for the ECS Fast Autoscaler"
+      ScheduleExpression: !Ref AutoscalerSchedule
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt AutoscalerFunction.Arn
+          Id: "AutoscalerTarget"
+
+  AutoscalerPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AutoscalerFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt AutoscalerScheduleRule.Arn
+
+Outputs:
+  AutoscalerFunctionArn:
+    Description: "ARN of the Autoscaler Lambda Function"
+    Value: !GetAtt AutoscalerFunction.Arn
+
+  AutoscalerLogGroup:
+    Description: "Log Group for the Autoscaler Lambda Function"
+    Value: !Sub "/aws/lambda/${AutoscalerFunction}"
