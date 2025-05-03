@@ -44,13 +44,9 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          // Edit this page links will point to your repo
-          editUrl:
-            'https://github.com/stepscale/fast-autoscaler/tree/main/website/',
-          // This makes your main docs page serve as the landing page
           routeBasePath: '/docs',
         },
-        blog: false, // Disable blog
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
