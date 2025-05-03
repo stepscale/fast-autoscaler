@@ -4,37 +4,40 @@ sidebar_position: 3
 
 # Contact Us
 
-We'd love to hear from you! Here's how you can reach the StepScale.io team:
+We're here to help with any questions about our products or services. Here's how to reach the StepScale.io team:
 
-## General Inquiries
+## Technical Support & Bug Reports
 
-For general questions about StepScale.io or our products:
+If you encounter any issues with Fast Autoscaler or have technical questions:
 
-**Email**: [info@stepscale.io](mailto:info@stepscale.io)
+**GitHub Issues**: Please create a detailed issue in our [repository](https://github.com/stepscale/fast-autoscaler/issues) with:
+- A clear description of the problem
+- Steps to reproduce
+- Your environment details
+- Expected vs actual behavior
+- Any relevant logs or screenshots
 
-## Technical Support
+This is our preferred support channel as it helps others who might face similar issues.
 
-For questions about using Fast Autoscaler or other technical issues:
+## Direct Communication
 
-**GitHub Issues**: [https://github.com/stepscale/fast-autoscaler/issues](https://github.com/stepscale/fast-autoscaler/issues)  
-**Email**: [support@stepscale.io](mailto:support@stepscale.io)
+For business inquiries, partnership opportunities, or confidential matters:
 
-## Business Inquiries
+**Email**: [contact@stepscale.io](mailto:contact@stepscale.io)
 
-For partnership opportunities or business-related questions:
-
-**Email**: [business@stepscale.io](mailto:business@stepscale.io)
+We aim to respond to all inquiries within 1-2 business days.
 
 ## Open Source Contributions
 
-We welcome contributions to our open source projects! Check out our contribution guidelines in the repository:
+We welcome contributions to Fast Autoscaler! To get involved:
 
-[https://github.com/stepscale/fast-autoscaler](https://github.com/stepscale/fast-autoscaler)
+1. Check out our [GitHub repository](https://github.com/stepscale/fast-autoscaler)
+2. Read the contribution guidelines in our README
+3. Start with issues labeled "good first issue" if you're new to the project
+4. Submit pull requests with improvements or bug fixes
 
-## Follow Us
+Your contributions help make Fast Autoscaler better for everyone!
 
-Stay updated with our latest developments:
+---
 
-- **GitHub**: [https://github.com/stepscale](https://github.com/stepscale)
-- **Twitter**: [@stepscaleio](https://twitter.com/stepscaleio)
-- **LinkedIn**: [StepScale.io](https://linkedin.com/company/stepscale)
+We value your feedback and look forward to helping you optimize your cloud infrastructure with StepScale.io tools!

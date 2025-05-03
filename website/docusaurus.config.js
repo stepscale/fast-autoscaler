@@ -75,21 +75,15 @@ const config = {
             label: 'Home',
           },
           {
-            to: '/docs/intro',
+            to: '/docs/fast-autoscaler/intro',
             position: 'left',
-            label: 'Documentation',
+            label: 'Fast Autoscaler',
+            className: 'navbar-item-bold',
           },
           {
-            type: 'dropdown',
-            label: 'Products',
+            to: '/docs/articles/why-fargate-instead-of-eks-ec2',
             position: 'left',
-            items: [
-              {
-                label: 'Fast Autoscaler',
-                to: '/docs/fast-autoscaler/intro',
-              },
-              // Future products can be added here
-            ],
+            label: 'Articles',
           },
           {
             to: '/docs/about-us',

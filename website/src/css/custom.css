@@ -169,3 +169,7 @@ table tr:nth-child(even) {
     padding: 0.5rem;
   }
 }
+
+.navbar-item-bold {
+  font-weight: bold;
+}

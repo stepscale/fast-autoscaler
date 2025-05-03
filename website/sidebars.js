@@ -48,6 +48,13 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'Articles',
+      items: [
+        'articles/why-fargate-instead-of-eks-ec2',
+      ],
+    },
   ],
 };
 
