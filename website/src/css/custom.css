@@ -1,0 +1,171 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  /* Primary blue from the steps/chart in icon */
+  --ifm-color-primary: #0B69A3;
+  --ifm-color-primary-dark: #0A5E93;
+  --ifm-color-primary-darker: #095788;
+  --ifm-color-primary-darkest: #074770;
+  --ifm-color-primary-light: #0C74B3;
+  --ifm-color-primary-lighter: #0D7FBE;
+  --ifm-color-primary-lightest: #1389CF;
+
+  /* Gradients for special elements, matching the growth arrow */
+  --stepscale-gradient-light: linear-gradient(135deg, #1389CF 0%, #0B69A3 100%);
+  --stepscale-gradient-dark: linear-gradient(135deg, #0B69A3 0%, #074770 100%);
+
+  /* Accent color (for highlights, buttons, etc.) */
+  --stepscale-accent: #47B881;
+  --stepscale-accent-dark: #3DA975;
+
+  /* Background shade for examples and notes */
+  --stepscale-bg-light: #E9F2FA;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(11, 105, 163, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #3CA1D8;
+  --ifm-color-primary-dark: #2993CE;
+  --ifm-color-primary-darker: #258BC3;
+  --ifm-color-primary-darkest: #1E73A1;
+  --ifm-color-primary-light: #51ABDD;
+  --ifm-color-primary-lighter: #61B2E0;
+  --ifm-color-primary-lightest: #85C5E8;
+
+  /* Darker mode gradients */
+  --stepscale-gradient-light: linear-gradient(135deg, #51ABDD 0%, #2993CE 100%);
+  --stepscale-gradient-dark: linear-gradient(135deg, #2993CE 0%, #1E73A1 100%);
+
+  /* Accent color for dark mode */
+  --stepscale-accent: #5ACA94;
+  --stepscale-accent-dark: #47B881;
+
+  /* Background shade for examples and notes in dark mode */
+  --stepscale-bg-light: rgba(60, 161, 216, 0.15);
+
+  --docusaurus-highlighted-code-line-bg: rgba(60, 161, 216, 0.3);
+}
+
+/* Custom styling for buttons */
+.button--primary {
+  background: var(--stepscale-gradient-light);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.button--primary:hover {
+  background: var(--stepscale-gradient-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom styling for admonitions/callouts to match brand */
+.alert--primary {
+  border-left-color: var(--ifm-color-primary);
+  background-color: var(--stepscale-bg-light);
+}
+
+.alert--success {
+  border-left-color: var(--stepscale-accent);
+}
+
+/* Add a subtle step pattern to the navbar */
+.navbar {
+  background-image: linear-gradient(to right, transparent 97%, rgba(11, 105, 163, 0.1) 100%),
+    linear-gradient(to right, transparent 94%, rgba(11, 105, 163, 0.05) 97%),
+    linear-gradient(to right, transparent 90%, rgba(11, 105, 163, 0.025) 94%);
+}
+
+/* Custom styling for headers to give them a subtle indicator of hierarchy */
+h2 {
+  position: relative;
+}
+
+h2::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--ifm-color-primary);
+  border-radius: 1px;
+}
+
+h3::before {
+  content: '';
+  position: absolute;
+  left: -0.75rem;
+  top: 0.5rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: var(--stepscale-accent);
+  border-radius: 1px;
+}
+
+/* Code blocks with a subtle step-like border */
+pre {
+  border-left: 4px solid var(--ifm-color-primary);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Custom styling for the footer */
+.footer {
+  background: linear-gradient(to right, #074770, #0B69A3);
+}
+
+/* Styling for the home page features */
+.features {
+  padding: 2rem 0;
+  width: 100%;
+}
+
+/* Custom table styling */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+table thead tr {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+table th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
+table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Alternating table row colors */
+table tr:nth-child(even) {
+  background-color: var(--stepscale-bg-light);
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+}

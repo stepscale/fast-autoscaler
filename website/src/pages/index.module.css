@@ -1,0 +1,82 @@
+/**
+ * CSS styles for homepage
+ */
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0B69A3 0%, #074770 100%);
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.sectionAlt {
+  background-color: var(--stepscale-bg-light);
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, #0B69A3, #47B881);
+  border-radius: 2px;
+}
+
+.productCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.productCard h3 {
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .buttonContainer {
+    flex-direction: column;
+  }
+}
