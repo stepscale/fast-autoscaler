@@ -1,0 +1,228 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'High-Frequency Fast Autoscaler using Step Functions'
+
+Parameters:
+  ECSClusterName:
+    Type: String
+    Description: Name of the ECS cluster
+
+  ECSServiceName:
+    Type: String
+    Description: Name of the ECS service to autoscale
+
+  SQSQueueURL:
+    Type: String
+    Description: URL of the SQS queue to monitor
+
+  MinTasks:
+    Type: Number
+    Description: Minimum number of tasks
+    Default: 2
+
+  MaxTasks:
+    Type: Number
+    Description: Maximum number of tasks
+    Default: 100
+
+  ScaleUpThreshold:
+    Type: Number
+    Description: Queue size threshold for scaling up
+    Default: 100
+
+  ScaleDownThreshold:
+    Type: Number
+    Description: Queue size threshold for scaling down
+    Default: 10
+
+  StepFunctionSchedule:
+    Type: String
+    Description: CloudWatch Events schedule expression for the Step Function
+    Default: "rate(1 minute)"
+
+  CheckFrequencySeconds:
+    Type: Number
+    Description: How often to check queue metrics within the Step Function (in seconds)
+    Default: 10
+
+  ChecksPerExecution:
+    Type: Number
+    Description: Number of checks to perform in each Step Function execution
+    Default: 6
+
+Resources:
+  AutoscalerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ECSAutoscalerPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:GetQueueAttributes
+                Resource: !Sub "arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*"
+              - Effect: Allow
+                Action:
+                  - ecs:DescribeServices
+                  - ecs:UpdateService
+                Resource: !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:service/${ECSClusterName}/${ECSServiceName}"
+              - Effect: Allow
+                Action:
+                  - ecs:DescribeClusters
+                Resource: !Sub "arn:aws:ecs:${AWS::Region}:${AWS::AccountId}:cluster/${ECSClusterName}"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: "*"
+
+  StepFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StepFunctionPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !GetAtt AutoscalerFunction.Arn
+
+  AutoscalerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda_function.handler
+      Role: !GetAtt AutoscalerRole.Arn
+      Runtime: python3.9
+      Timeout: 30
+      MemorySize: 128
+      Environment:
+        Variables:
+          ECS_CLUSTER: !Ref ECSClusterName
+          SERVICE_NAME: !Ref ECSServiceName
+          SQS_QUEUE_URL: !Ref SQSQueueURL
+          MIN_TASKS: !Ref MinTasks
+          MAX_TASKS: !Ref MaxTasks
+          SCALE_UP_THRESHOLD: !Ref ScaleUpThreshold
+          SCALE_DOWN_THRESHOLD: !Ref ScaleDownThreshold
+          LOG_LEVEL: INFO
+      Code:
+        ZipFile: |
+          # Placeholder for actual Lambda code
+          # This would be the main autoscaler logic from autoscaler/main.py
+
+  AutoscalerStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineType: EXPRESS
+      RoleArn: !GetAtt StepFunctionRole.Arn
+      DefinitionString: !Sub |
+        {
+          "Comment": "High-frequency autoscaler using Step Functions",
+          "StartAt": "Initialize",
+          "States": {
+            "Initialize": {
+              "Type": "Pass",
+              "Result": {
+                "index": 0,
+                "checks": ${ChecksPerExecution},
+                "timestamps": []
+              },
+              "Next": "CheckLoop"
+            },
+            "CheckLoop": {
+              "Type": "Map",
+              "ItemsPath": "$.checks",
+              "MaxConcurrency": 1,
+              "Iterator": {
+                "StartAt": "Wait",
+                "States": {
+                  "Wait": {
+                    "Type": "Wait",
+                    "SecondsPath": "$.WaitTime",
+                    "Next": "InvokeAutoscaler"
+                  },
+                  "InvokeAutoscaler": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:states:::lambda:invoke",
+                    "Parameters": {
+                      "FunctionName": "${AutoscalerFunction.Arn}",
+                      "Payload": {
+                        "timestamp.$": "$$.State.EnteredTime",
+                        "index.$": "$$.Map.Item.Value"
+                      },
+                      "InvocationType": "Event"
+                    },
+                    "End": true
+                  }
+                }
+              },
+              "ItemSelector": {
+                "WaitTime.$": "States.MathAdd(States.MathMultiply($$.Map.Item.Value, ${CheckFrequencySeconds}), 0)"
+              },
+              "Next": "Done",
+              "ItemsPath": "$$.Map.Item.Value"
+            },
+            "Done": {
+              "Type": "Pass",
+              "End": true
+            }
+          }
+        }
+
+  StateMachineScheduleRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Schedule for the High-Frequency Autoscaler State Machine"
+      ScheduleExpression: !Ref StepFunctionSchedule
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt AutoscalerStateMachine.Arn
+          Id: "StateMachineTarget"
+          RoleArn: !GetAtt StateMachineInvokeRole.Arn
+
+  StateMachineInvokeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StepFunctionInvokePermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: states:StartExecution
+                Resource: !GetAtt AutoscalerStateMachine.Arn
+
+Outputs:
+  StateMachineArn:
+    Description: "ARN of the Autoscaler State Machine"
+    Value: !GetAtt AutoscalerStateMachine.Arn
+
+  LambdaFunctionArn:
+    Description: "ARN of the Autoscaler Lambda Function"
+    Value: !GetAtt AutoscalerFunction.Arn
