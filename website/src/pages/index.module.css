@@ -2,27 +2,464 @@
  * CSS styles for homepage
  */
 
+/* Modern Hero Banner */
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
   position: relative;
+  padding: 5rem 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #0B69A3 0%, #074770 100%);
+  background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+  min-height: 600px;
+  display: flex;
+  align-items: center;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(rgba(11, 105, 163, 0.1) 2px, transparent 2px),
+    radial-gradient(rgba(71, 184, 129, 0.1) 2px, transparent 2px);
+  background-size: 50px 50px, 60px 60px;
+  background-position: 0 0, 25px 25px;
+  animation: moveBackground 30s linear infinite;
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0 0, 25px 25px;
+  }
+
+  100% {
+    background-position: 100px 100px, 125px 125px;
   }
 }
 
-.buttons {
-  display: flex;
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
   align-items: center;
-  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.heroContent {
+  color: var(--ifm-color-white);
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ffffff 0%, #47B881 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  opacity: 0.9;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
   margin-top: 2rem;
 }
 
+.heroButtons a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 48px;
+  padding: 0 1.5rem;
+}
+
+.secondaryButton {
+  color: var(--ifm-color-white);
+  border-color: var(--ifm-color-white);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 48px;
+  /* Match the height of the primary button */
+  padding: 0 1.5rem;
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.heroImageContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Auto-Scaling Animation */
+.autoScalingAnimation {
+  width: 100%;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background: rgba(7, 27, 65, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(11, 105, 163, 0.3);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Queue Section */
+.queueContainer {
+  margin-bottom: 1.5rem;
+}
+
+.queueTitle,
+.autoscalerTitle,
+.tasksTitle {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.queueTitle::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #47B881;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.queueBar {
+  height: 20px;
+  background: rgba(4, 15, 36, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(11, 105, 163, 0.5);
+  position: relative;
+}
+
+.queueFill {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, #47B881, #0B69A3);
+  border-radius: 10px;
+  animation: queuePulse 8s infinite;
+}
+
+@keyframes queuePulse {
+  0% {
+    width: 20%;
+  }
+
+  20% {
+    width: 60%;
+  }
+
+  40% {
+    width: 80%;
+  }
+
+  60% {
+    width: 75%;
+  }
+
+  80% {
+    width: 40%;
+  }
+
+  100% {
+    width: 20%;
+  }
+}
+
+.messageIndicators {
+  display: flex;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
+}
+
+.messageIcon {
+  width: 12px;
+  height: 12px;
+  background: #47B881;
+  border-radius: 2px;
+  opacity: 0.7;
+  animation: messagePulse 8s infinite;
+}
+
+.messageIcon:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.messageIcon:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.messageIcon:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.messageIcon:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+.messageIcon:nth-child(6) {
+  animation-delay: 1s;
+}
+
+.messageIcon:nth-child(7) {
+  animation-delay: 1.2s;
+}
+
+.messageIcon:nth-child(8) {
+  animation-delay: 1.4s;
+}
+
+@keyframes messagePulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  60% {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+/* Autoscaler Section */
+.autoscalerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.autoscalerTitle {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.autoscalerTitle::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #0B69A3;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.autoscalerIcon {
+  width: 70px;
+  height: 70px;
+  background: rgba(11, 105, 163, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(11, 105, 163, 0.5);
+  position: relative;
+  box-shadow: 0 0 15px rgba(11, 105, 163, 0.3);
+}
+
+.gearOne,
+.gearTwo {
+  position: absolute;
+  background: #0B69A3;
+  border-radius: 50%;
+}
+
+.gearOne {
+  width: 36px;
+  height: 36px;
+  top: 10px;
+  left: 10px;
+  animation: rotateGear 10s linear infinite;
+  background: conic-gradient(from 0deg, #0B69A3, #47B881, #0B69A3);
+  clip-path: polygon(50% 0%, 63% 10%, 80% 0%, 87% 15%, 100% 25%, 90% 40%, 100% 55%, 87% 70%, 80% 85%, 63% 75%, 50% 85%, 37% 75%, 20% 85%, 13% 70%, 0% 55%, 10% 40%, 0% 25%, 13% 15%, 20% 0%, 37% 10%);
+}
+
+.gearTwo {
+  width: 24px;
+  height: 24px;
+  bottom: 8px;
+  right: 10px;
+  animation: rotateGearReverse 6s linear infinite;
+  background: conic-gradient(from 0deg, #47B881, #0B69A3, #47B881);
+  clip-path: polygon(50% 0%, 63% 10%, 80% 0%, 87% 15%, 100% 25%, 90% 40%, 100% 55%, 87% 70%, 80% 85%, 63% 75%, 50% 85%, 37% 75%, 20% 85%, 13% 70%, 0% 55%, 10% 40%, 0% 25%, 13% 15%, 20% 0%, 37% 10%);
+}
+
+@keyframes rotateGear {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateGearReverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Tasks Section */
+.tasksContainer {
+  width: 100%;
+}
+
+.tasksTitle {
+  margin-bottom: 0.75rem;
+}
+
+.tasksTitle::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #FF6B6B;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.tasksGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.taskBlock {
+  height: 40px;
+  background: rgba(11, 105, 163, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(11, 105, 163, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.taskBlock::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0B69A3, #47B881);
+  animation: taskPulse 2s infinite alternate;
+}
+
+@keyframes taskPulse {
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.taskScaleIn {
+  animation: scaleInOut 8s infinite;
+}
+
+@keyframes scaleInOut {
+
+  0%,
+  15% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  20%,
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  60%,
+  80% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  85%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Lines connecting components */
+.autoScalingAnimation::before,
+.autoScalingAnimation::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #0B69A3, transparent);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.autoScalingAnimation::before {
+  top: 90px;
+  height: 60px;
+}
+
+.autoScalingAnimation::after {
+  bottom: 90px;
+  height: 60px;
+}
+
+/* Existing Styles */
 .section {
   padding: 4rem 0;
 }
@@ -51,7 +488,8 @@
 }
 
 .productCard {
-  background-color: white;
+  background-color: var(--ifm-card-background-color);
+  color: var(--ifm-font-color-base);
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 2rem;
@@ -73,10 +511,96 @@
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
+  align-items: center;
+}
+
+/* Smaller buttons for product cards */
+.productButton {
+  font-size: 0.875rem;
+  height: 38px;
+  padding: 0 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: var(--ifm-button-border-radius);
+}
+
+/* Default button styling for larger buttons */
+.buttonContainer a.button:not(.productButton) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 48px;
+  padding: 0 1.5rem;
+}
+
+/* Make hero responsive */
+@media screen and (max-width: 996px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .heroContent {
+    order: 1;
+  }
+
+  .heroImageContainer {
+    order: 0;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.25rem;
+    margin: 0 auto 2rem auto;
+  }
+
+  .heroButtons {
+    justify-content: center;
+  }
+
+  .heroBanner {
+    padding: 3rem 2rem;
+    min-height: auto;
+  }
+
+  .autoScalingAnimation {
+    max-width: 400px;
+    margin: 0 auto;
+  }
 }
 
 @media screen and (max-width: 768px) {
   .buttonContainer {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttonContainer a.button {
+    width: 100%;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .autoScalingAnimation {
+    height: 320px;
+    padding: 1rem;
+  }
+
+  .tasksGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .taskBlock {
+    height: 35px;
   }
 }

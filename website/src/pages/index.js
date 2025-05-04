@@ -10,16 +10,67 @@ import styles from './index.module.css';
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/fast-autoscaler/intro">
-            Explore Fast Autoscaler
-          </Link>
+    <header className={styles.heroBanner}>
+      <div className={styles.heroOverlay}></div>
+      <div className={styles.heroGrid}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+          <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
+          <div className={styles.heroButtons}>
+            <Link
+              className="button button--primary button--lg"
+              to="/docs/fast-autoscaler/intro">
+              Explore Fast Autoscaler
+            </Link>
+            <Link
+              className={clsx("button button--outline", styles.secondaryButton)}
+              to="/docs/intro">
+              Learn More
+            </Link>
+          </div>
+        </div>
+        <div className={styles.heroImageContainer}>
+          <div className={styles.autoScalingAnimation}>
+            <div className={styles.queueContainer}>
+              <div className={styles.queueTitle}>SQS Queue</div>
+              <div className={styles.queueBar}>
+                <div className={styles.queueFill}></div>
+              </div>
+              <div className={styles.messageIndicators}>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+                <div className={styles.messageIcon}></div>
+              </div>
+            </div>
+
+            <div className={styles.autoscalerContainer}>
+              <div className={styles.autoscalerTitle}>Fast Autoscaler</div>
+              <div className={styles.autoscalerIcon}>
+                <div className={styles.gearOne}></div>
+                <div className={styles.gearTwo}></div>
+              </div>
+            </div>
+
+            <div className={styles.tasksContainer}>
+              <div className={styles.tasksTitle}>ECS Tasks</div>
+              <div className={styles.tasksGrid}>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock}></div>
+                <div className={styles.taskBlock + ' ' + styles.taskScaleIn}></div>
+                <div className={styles.taskBlock + ' ' + styles.taskScaleIn}></div>
+                <div className={styles.taskBlock + ' ' + styles.taskScaleIn}></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -68,10 +119,14 @@ export default function Home() {
                     to optimize both performance and cost.
                   </p>
                   <div className={styles.buttonContainer}>
-                    <Link className="button button--primary" to="/docs/fast-autoscaler/intro">
+                    <Link
+                      className={clsx("button button--primary", styles.productButton)}
+                      to="/docs/fast-autoscaler/intro">
                       Learn More
                     </Link>
-                    <Link className="button button--outline button--primary" to="https://github.com/stepscale/fast-autoscaler">
+                    <Link
+                      className={clsx("button button--secondary", styles.productButton)}
+                      to="https://github.com/stepscale/fast-autoscaler">
                       View on GitHub
                     </Link>
                   </div>
@@ -105,4 +160,4 @@ export default function Home() {
       </main>
     </Layout>
   );
-} 
+}
