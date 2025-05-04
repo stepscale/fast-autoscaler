@@ -102,55 +102,6 @@ const config = {
           },
         ],
       },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'StepScale',
-            items: [
-              {
-                label: 'About Us',
-                to: '/docs/about-us',
-              },
-              {
-                label: 'Our Products',
-                to: '/docs/products',
-              },
-              {
-                label: 'Contact',
-                to: '/docs/contact',
-              },
-            ],
-          },
-          {
-            title: 'Products',
-            items: [
-              {
-                label: 'Fast Autoscaler',
-                to: '/docs/fast-autoscaler/intro',
-              },
-              {
-                label: 'Fast Autoscaler GitHub',
-                href: 'https://github.com/stepscale/fast-autoscaler',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'GitHub Discussions',
-                href: 'https://github.com/stepscale/fast-autoscaler/discussions',
-              },
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/stepscale',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} StepScale.io. Built with Docusaurus.`,
-      },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
