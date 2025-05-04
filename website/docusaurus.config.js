@@ -81,7 +81,7 @@ const config = {
             className: 'navbar-item-bold',
           },
           {
-            to: '/docs/articles/why-fargate-instead-of-eks-ec2',
+            to: '/docs/articles/intro',
             position: 'left',
             label: 'Articles',
           },

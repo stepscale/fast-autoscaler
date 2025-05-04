@@ -128,15 +128,12 @@ function ModernFooter() {
               <li>
                 <Link to="/docs/fast-autoscaler/intro">Fast Autoscaler</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/docs/roadmap">Product Roadmap</Link>
               </li>
               <li>
-                <Link to="/pricing">Pricing</Link>
-              </li>
-              <li>
                 <Link to="/docs/fast-autoscaler/changelog">Changelog</Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -145,16 +142,13 @@ function ModernFooter() {
             <h3 className={styles.footerHeading}>Resources</h3>
             <ul className={styles.footerLinks}>
               <li>
-                <Link to="/docs">Documentation</Link>
-              </li>
-              <li>
-                <Link to="/blog">Blog</Link>
+                <Link to="/docs/fast-autoscaler/intro">Documentation</Link>
               </li>
               <li>
                 <Link to="https://github.com/stepscale/fast-autoscaler">GitHub</Link>
               </li>
               <li>
-                <Link to="/docs/fast-autoscaler/tutorials">Tutorials</Link>
+                <Link to="/docs/articles/intro">Tutorials & Articles</Link>
               </li>
             </ul>
           </div>
@@ -164,13 +158,10 @@ function ModernFooter() {
             <h3 className={styles.footerHeading}>Company</h3>
             <ul className={styles.footerLinks}>
               <li>
-                <Link to="/about">About Us</Link>
+                <Link to="/docs/about-us">About Us</Link>
               </li>
               <li>
                 <Link to="/docs/contact">Contact</Link>
-              </li>
-              <li>
-                <Link to="/careers">Careers</Link>
               </li>
               <li>
                 <Link to="/legal/privacy">Privacy Policy</Link>

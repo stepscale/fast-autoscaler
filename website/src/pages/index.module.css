@@ -96,7 +96,6 @@
   justify-content: center;
   text-align: center;
   height: 48px;
-  /* Match the height of the primary button */
   padding: 0 1.5rem;
 }
 
@@ -124,6 +123,9 @@
   border: 1px solid rgba(11, 105, 163, 0.3);
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  min-height: 400px;
+  padding-bottom: 2rem;
+  overflow: hidden;
 }
 
 /* Queue Section */
@@ -409,6 +411,7 @@
 
 .taskScaleIn {
   animation: scaleInOut 8s infinite;
+  transform-origin: center;
 }
 
 @keyframes scaleInOut {
@@ -441,12 +444,7 @@
 /* Lines connecting components */
 .autoScalingAnimation::before,
 .autoScalingAnimation::after {
-  content: '';
-  position: absolute;
-  width: 2px;
-  background: linear-gradient(to bottom, transparent, #0B69A3, transparent);
-  left: 50%;
-  transform: translateX(-50%);
+  content: none;
 }
 
 .autoScalingAnimation::before {
@@ -536,21 +534,23 @@
   padding: 0 1.5rem;
 }
 
-/* Make hero responsive */
+/* Enhanced mobile styles for hero section */
 @media screen and (max-width: 996px) {
   .heroGrid {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 0.5rem;
   }
 
   .heroContent {
     order: 1;
+    padding: 0 1rem;
   }
 
   .heroImageContainer {
     order: 0;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .heroTitle {
@@ -559,21 +559,40 @@
 
   .heroSubtitle {
     font-size: 1.25rem;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 1.5rem auto;
+    max-width: 100%;
   }
 
   .heroButtons {
     justify-content: center;
+    margin-top: 1.5rem;
   }
 
   .heroBanner {
-    padding: 3rem 2rem;
+    padding: 2rem 1rem;
     min-height: auto;
   }
 
   .autoScalingAnimation {
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
+    min-height: 400px;
+    padding-bottom: 1.5rem;
+  }
+
+  .queueContainer,
+  .autoscalerContainer {
+    margin-bottom: 1rem;
+  }
+
+  .autoScalingAnimation::before {
+    top: 75px;
+    height: 40px;
+  }
+
+  .autoScalingAnimation::after {
+    bottom: 75px;
+    height: 40px;
   }
 }
 
@@ -581,6 +600,7 @@
   .buttonContainer {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .buttonContainer a.button {
@@ -591,9 +611,15 @@
     font-size: 2rem;
   }
 
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
   .autoScalingAnimation {
-    height: 320px;
-    padding: 1rem;
+    min-height: 350px;
+    padding: 0.75rem;
+    padding-bottom: 1.25rem;
+    max-width: 350px;
   }
 
   .tasksGrid {
@@ -601,7 +627,84 @@
   }
 
   .taskBlock {
-    height: 35px;
+    height: 32px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .heroButtons a.button {
+    width: 100%;
+    height: 44px;
+  }
+
+  .queueTitle,
+  .autoscalerTitle,
+  .tasksTitle {
+    font-size: 0.8rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .queueBar {
+    height: 16px;
+  }
+
+  .messageIcon {
+    width: 10px;
+    height: 10px;
+  }
+
+  .autoscalerIcon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .gearOne {
+    width: 30px;
+    height: 30px;
+  }
+
+  .gearTwo {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .heroTitle {
+    font-size: 1.75rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .autoScalingAnimation {
+    height: 250px;
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  .autoScalingAnimation::before {
+    top: 65px;
+    height: 30px;
+  }
+
+  .autoScalingAnimation::after {
+    bottom: 65px;
+    height: 30px;
+  }
+
+  .tasksGrid {
+    gap: 5px;
+  }
+
+  .taskBlock {
+    height: 28px;
   }
 }
 
