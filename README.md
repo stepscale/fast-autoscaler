@@ -4,13 +4,20 @@ A modular, extensible autoscaling solution for AWS ECS services based on queue m
 
 ## Features
 
-- Dynamic scaling of ECS services based on SQS queue metrics
+- Dynamic scaling of ECS services based on multiple queue metrics sources
 - Configurable scaling thresholds and cooldown periods
 - Priority override for scale-up operations
 - Support for scaling based on visible and/or in-flight messages
-- Extensible architecture with support for different queue providers (SQS, AMQ, etc.)
+- Extensible architecture with support for different queue providers:
+  - Amazon SQS
+  - Amazon MQ (ActiveMQ)
+  - Amazon Kinesis Data Streams
+  - Amazon MSK (Kafka)
+  - RabbitMQ
+  - Redis-based queues
 - S3-based state management for cooldown tracking
 - Detailed logging with JSON formatting for CloudWatch integration
+- Configuration via environment variables or event payload
 
 ## Inspiration
 
@@ -24,18 +31,19 @@ The autoscaler follows a modular architecture to support different message queue
 - **Queue Metrics**: Abstracted queue metric collection with provider-specific implementations
 - **State Management**: S3-based state tracking for scaling events and cooldowns
 - **AWS Integration**: Lightweight wrapper around AWS services
+- **Configuration**: Flexible configuration from environment variables or event payload
 
 ## Usage
 
-### Environment Variables
+### Basic Configuration
 
-Configure the autoscaler using these environment variables:
+Configure the autoscaler using these environment variables or by providing them in the Lambda event payload:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
+| `QUEUE_TYPE` | Type of queue (sqs, amq, kinesis, kafka, rabbitmq, redis) | sqs |
 | `ECS_CLUSTER` | ECS cluster name | (required) |
 | `SERVICE_NAME` | ECS service name | (required) |
-| `SQS_QUEUE_URL` | URL of the SQS queue to monitor | (required) |
 | `MIN_TASKS` | Minimum number of tasks | 10 |
 | `MAX_TASKS` | Maximum number of tasks | 300 |
 | `SCALE_UP_THRESHOLD` | Queue size threshold for scaling up | 100.0 |
@@ -48,6 +56,81 @@ Configure the autoscaler using these environment variables:
 | `USE_COMBINED_MESSAGES` | Include in-flight messages in scaling decisions | False |
 | `S3_CONFIG_BUCKET` | S3 bucket for state storage | tf-configuration-bucket-test |
 | `LOG_LEVEL` | Logging level | INFO |
+
+### Queue-Specific Configuration
+
+#### SQS
+```
+QUEUE_TYPE=sqs
+SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/123456789012/my-queue
+```
+
+#### Amazon MQ (ActiveMQ)
+```
+QUEUE_TYPE=amq
+AMQ_BROKER_ID=b-1234a5b6-78cd-901e-2fgh-3i45j6k178l9
+AMQ_QUEUE_NAME=my-queue
+AMQ_USERNAME=admin
+AMQ_PASSWORD=password
+```
+
+#### Kinesis Data Streams
+```
+QUEUE_TYPE=kinesis
+KINESIS_STREAM_NAME=my-stream
+```
+
+#### Amazon MSK (Kafka)
+```
+QUEUE_TYPE=kafka
+MSK_CLUSTER_ARN=arn:aws:kafka:us-east-1:123456789012:cluster/my-cluster/abcdefgh-1234-5678-9ijklmno
+KAFKA_TOPIC=my-topic
+KAFKA_BOOTSTRAP_SERVERS=b-1.my-cluster.abcdef.c1.kafka.us-east-1.amazonaws.com:9092,b-2.my-cluster.abcdef.c1.kafka.us-east-1.amazonaws.com:9092
+KAFKA_CONSUMER_GROUP=autoscaler-monitor
+```
+
+#### RabbitMQ
+```
+QUEUE_TYPE=rabbitmq
+RABBITMQ_HOST=rabbitmq.example.com
+RABBITMQ_PORT=5672
+RABBITMQ_VHOST=/
+RABBITMQ_QUEUE=my-queue
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+```
+
+#### Redis
+```
+QUEUE_TYPE=redis
+REDIS_HOST=redis.example.com
+REDIS_PORT=6379
+REDIS_PASSWORD=password
+REDIS_QUEUE_KEY=my-queue
+REDIS_QUEUE_TYPE=list  # or 'stream'
+```
+
+### Event Payload Configuration
+
+You can also configure the autoscaler by passing a configuration object in the Lambda event:
+
+```json
+{
+  "config": {
+    "queue_type": "sqs",
+    "queue_config": {
+      "queue_url": "https://sqs.us-east-1.amazonaws.com/123456789012/my-queue"
+    },
+    "cluster_name": "my-cluster",
+    "service_name": "my-service",
+    "min_tasks": 10,
+    "max_tasks": 300,
+    "scale_up_threshold": 100.0,
+    "scale_down_threshold": 99.0,
+    "tasks_per_message": 0.01
+  }
+}
+```
 
 ## Deployment
 
@@ -72,7 +155,7 @@ To deploy as an AWS Lambda function:
      --role arn:aws:iam::<account-id>:role/your-lambda-role \
      --zip-file fileb://lambda_deployment.zip \
      --timeout 60 \
-     --environment "Variables={ECS_CLUSTER=your-cluster,SERVICE_NAME=your-service,SQS_QUEUE_URL=your-queue-url}"
+     --environment "Variables={QUEUE_TYPE=sqs,ECS_CLUSTER=your-cluster,SERVICE_NAME=your-service,SQS_QUEUE_URL=your-queue-url}"
    ```
 
 ### CloudWatch Event Rule
@@ -93,18 +176,26 @@ aws events put-targets \
 
 The Lambda function requires these permissions:
 
-- `sqs:GetQueueAttributes` - To read queue metrics
-- `ecs:DescribeServices` - To get current service state
-- `ecs:UpdateService` - To update service desired count
-- `s3:GetObject` and `s3:PutObject` - For state management
+- **Queue Access**:
+  - `sqs:GetQueueAttributes` - For SQS queues
+  - `kafka:DescribeCluster`, `kafka:GetBootstrapBrokers` - For MSK
+  - `kinesis:DescribeStream`, `kinesis:GetRecords` - For Kinesis
+  - `mq:DescribeBroker` - For Amazon MQ
+- **ECS Access**:
+  - `ecs:DescribeServices` - To get current service state
+  - `ecs:UpdateService` - To update service desired count
+- **State Management**:
+  - `s3:GetObject` and `s3:PutObject` - For state management in S3
+- **Monitoring (Optional)**:
+  - `cloudwatch:GetMetricStatistics` - For fallback metrics gathering
 
 ## Future Extensions
 
-- Support for Amazon MQ (ActiveMQ/RabbitMQ)
-- Custom metric sources beyond queues
+- Support for more queue providers and metrics sources
 - Container-based deployment option
 - Multi-service orchestration
 - Predictive scaling based on historical patterns
+- Custom scaling algorithms
 
 ## License
 
