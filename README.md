@@ -1,5 +1,7 @@
 # Fast Autoscaler
 
+[StepScale Documentation & Website](https://stepscale.io)
+
 A modular, extensible autoscaling solution for AWS ECS services based on queue metrics.
 
 ## Features
@@ -40,6 +42,37 @@ The autoscaler follows a modular architecture to support different message queue
 - **State Management**: S3-based state tracking for scaling events and cooldowns
 - **AWS Integration**: Lightweight wrapper around AWS services
 - **Configuration**: Flexible configuration from environment variables or event payload
+
+## Quick Start
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/stepscale/fast-autoscaler.git
+   cd fast-autoscaler
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Deploy to AWS Lambda (SQS example):**
+   ```bash
+   pip install -r requirements.txt -t package/
+   cp -r autoscaler package/
+   cp lambda_function.py package/
+   cd package && zip -r ../lambda_deployment.zip .
+   aws lambda create-function \
+     --function-name ecs-fast-autoscaler \
+     --runtime python3.9 \
+     --handler lambda_function.handler \
+     --role arn:aws:iam::<account-id>:role/your-lambda-role \
+     --zip-file fileb://lambda_deployment.zip \
+     --timeout 60 \
+     --environment "Variables={QUEUE_TYPE=sqs,ECS_CLUSTER=your-cluster,SERVICE_NAME=your-service,SQS_QUEUE_URL=your-queue-url}"
+   ```
+
+For more configuration options, see the [Usage](#usage) section.
 
 ## Usage
 
