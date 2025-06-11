@@ -19,6 +19,14 @@ A modular, extensible autoscaling solution for AWS ECS services based on queue m
 - Detailed logging with JSON formatting for CloudWatch integration
 - Configuration via environment variables or event payload
 
+## What's New in 0.2.0
+
+- Added support for more queue types: Kafka (MSK), Kinesis, RabbitMQ, Redis, and SNS.
+- Expanded configuration options for each queue type.
+- Improved modularity and extensibility for adding new queue providers.
+- Updated documentation and examples for new queue types.
+- Minor bug fixes and refactoring.
+
 ## Inspiration
 
 This project was inspired by Zac Charles' article [Another Way to Trigger a Lambda Function Every 5–10 Seconds](https://zaccharles.medium.com/another-way-to-trigger-a-lambda-function-every-5-10-seconds-41cb5bc3fa80), which describes creative approaches for high-frequency serverless processing. While our implementation focuses on autoscaling rather than high-frequency triggering, the article's insights about AWS service integration and precision timing were valuable in designing our solution.

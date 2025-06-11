@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="fast-autoscaler",
-    version="0.1.0",
+    version="0.2.0",
     author="StepScale.io",
     author_email="info@stepscale.io",
     description="A modular, extensible autoscaling solution for AWS ECS services based on queue metrics",
